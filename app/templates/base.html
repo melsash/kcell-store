@@ -704,6 +704,11 @@
                     <li>
                         <a href="/orders-page" class="{% block nav_orders %}{% endblock %}">Checkout</a>
                     </li>
+                    {% if current_user and current_user.role == 'admin' %}
+                    <li>
+                        <a href="/admin" class="{% block nav_admin %}{% endblock %}">Admin</a>
+                    </li>
+                    {% endif %}
                     {% if current_user %}
                     <li>
                         <a href="/profile" class="{% block nav_profile %}{% endblock %}">Profile</a>

@@ -1,0 +1,51 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Admin Products — Kcell Store{% endblock %}
+{% block nav_admin %}is-active{% endblock %}
+{% block nav_admin_products %}is-active{% endblock %}
+{% block admin_title %}Products{% endblock %}
+{% block admin_subtitle %}Create, edit, and delete store products{% endblock %}
+
+{% block admin_content %}
+<div class="admin-toolbar">
+    <p style="margin: 0; color: var(--text-muted);">{{ products|length }} product(s)</p>
+    <a href="/admin/products/create" class="btn btn--primary" style="width: auto;">Create product</a>
+</div>
+
+{% if products %}
+<div class="admin-table-wrap">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>{{ "%.0f"|format(product.price) }} ₸</td>
+                <td>
+                    <div class="admin-actions">
+                        <a href="/admin/products/edit/{{ product.id }}" class="btn btn--ghost btn--sm">Edit</a>
+                        <form action="/admin/products/delete/{{ product.id }}" method="post" onsubmit="return confirm('Delete this product?');">
+                            <button type="submit" class="btn btn--danger btn--sm">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <p>No products yet.</p>
+    <a href="/admin/products/create" class="btn btn--primary" style="width: auto;">Create product</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}Admin Dashboard — Kcell Store{% endblock %}
+{% block nav_admin %}is-active{% endblock %}
+{% block nav_admin_dashboard %}is-active{% endblock %}
+{% block admin_title %}Admin Dashboard{% endblock %}
+{% block admin_subtitle %}Overview of products and orders{% endblock %}
+
+{% block admin_content %}
+<div class="admin-cards">
+    <a href="/admin/products" class="admin-card" style="color: inherit;">
+        <h2>Products</h2>
+        <p class="admin-card__stat">{{ product_count }}</p>
+        <p>Manage catalog items, prices, and images.</p>
+        <span class="btn btn--ghost btn--sm" style="width: auto;">Manage products</span>
+    </a>
+    <a href="/admin/orders" class="admin-card" style="color: inherit;">
+        <h2>Orders</h2>
+        <p class="admin-card__stat">{{ order_count }}</p>
+        <p>View customer orders and totals.</p>
+        <span class="btn btn--ghost btn--sm" style="width: auto;">View orders</span>
+    </a>
+</div>
+{% endblock %}

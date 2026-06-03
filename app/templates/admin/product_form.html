@@ -1,0 +1,67 @@
+{% extends "admin/layout.html" %}
+
+{% block title %}{{ form_title }} — Admin{% endblock %}
+{% block nav_admin %}is-active{% endblock %}
+{% block nav_admin_products %}is-active{% endblock %}
+{% block admin_title %}{{ form_title }}{% endblock %}
+{% block admin_subtitle %}Fill in product details{% endblock %}
+
+{% block admin_content %}
+<div class="order-panel" style="max-width: 520px;">
+    <form action="{{ form_action }}" method="post">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input
+                id="name"
+                class="form-input"
+                type="text"
+                name="name"
+                value="{{ product.name if product else '' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input
+                id="description"
+                class="form-input"
+                type="text"
+                name="description"
+                value="{{ product.description if product else '' }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price (KZT)</label>
+            <input
+                id="price"
+                class="form-input"
+                type="number"
+                name="price"
+                step="1"
+                min="0"
+                value="{{ product.price|int if product else '' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="image">Image URL</label>
+            <input
+                id="image"
+                class="form-input"
+                type="text"
+                name="image"
+                value="{{ product.image if product else '' }}"
+                placeholder="https://..."
+            >
+        </div>
+
+        <button type="submit" class="btn btn--primary">
+            {% if product %}Save changes{% else %}Create product{% endif %}
+        </button>
+        <a href="/admin/products" class="btn btn--ghost btn--sm" style="margin-left: 12px;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

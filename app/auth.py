@@ -52,9 +52,17 @@ def is_admin(request: Request, db: Session) -> bool:
     return user is not None and user.role == ROLE_ADMIN
 
 
-def require_admin(request: Request, db: Session) -> RedirectResponse | None:
+def require_admin(request: Request, db: Session):
+    from app.page_context import page_context
+    from app.templating import templates
+
     if not is_authenticated(request, db):
         return RedirectResponse(url="/login", status_code=303)
     if not is_admin(request, db):
-        return RedirectResponse(url="/shop", status_code=303)
+        return templates.TemplateResponse(
+            request=request,
+            name="admin/forbidden.html",
+            context=page_context(request, db),
+            status_code=403,
+        )
     return None
