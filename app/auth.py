@@ -1,8 +1,9 @@
 from passlib.context import CryptContext
 from fastapi import Request
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
-from app.models.user import User
+from app.models.user import ROLE_ADMIN, User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -40,3 +41,20 @@ def get_current_user(request: Request, db: Session) -> User | None:
     if user_id is None:
         return None
     return db.query(User).filter(User.id == user_id).first()
+
+
+def is_authenticated(request: Request, db: Session) -> bool:
+    return get_current_user(request, db) is not None
+
+
+def is_admin(request: Request, db: Session) -> bool:
+    user = get_current_user(request, db)
+    return user is not None and user.role == ROLE_ADMIN
+
+
+def require_admin(request: Request, db: Session) -> RedirectResponse | None:
+    if not is_authenticated(request, db):
+        return RedirectResponse(url="/login", status_code=303)
+    if not is_admin(request, db):
+        return RedirectResponse(url="/shop", status_code=303)
+    return None

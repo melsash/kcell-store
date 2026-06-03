@@ -22,9 +22,9 @@
         </div>
 
         <div class="form-group">
-            <label>Account type</label>
-            <p style="margin: 0; color: var(--text-muted);">
-                {% if profile_user.is_admin %}Administrator{% else %}Customer{% endif %}
+            <label>Role</label>
+            <p style="margin: 0; color: var(--text-muted); text-transform: capitalize;">
+                {{ profile_user.role }}
             </p>
         </div>
 

@@ -12,10 +12,13 @@ from app.api.products import router as products_router
 from app.api.orders import router as orders_router
 from app.cart import build_cart_lines
 from app.database.init_db import init_db
+from app.database.migrate_users import migrate_user_roles
+from app.database.seed_admin import seed_admin_if_missing
 from app.database.seed_products import seed_products_if_empty
 from app.database.db import SessionLocal
 from app.models.product import Product
 from app.templating import templates
+from app.web.admin_routes import router as admin_router
 from app.web.auth_routes import router as auth_router
 from app.web.routes import router as storefront_router
 from app.page_context import page_context
@@ -37,6 +40,7 @@ app.add_middleware(
 
 app.include_router(storefront_router)
 app.include_router(auth_router)
+app.include_router(admin_router)
 app.include_router(products_router)
 app.include_router(orders_router)
 
@@ -46,6 +50,8 @@ def on_startup() -> None:
     for attempt in range(1, 11):
         try:
             init_db()
+            migrate_user_roles()
+            seed_admin_if_missing()
             seed_products_if_empty()
             return
         except OperationalError:
