@@ -704,6 +704,21 @@
                     <li>
                         <a href="/orders-page" class="{% block nav_orders %}{% endblock %}">Checkout</a>
                     </li>
+                    {% if current_user %}
+                    <li>
+                        <a href="/profile" class="{% block nav_profile %}{% endblock %}">Profile</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="/login" class="{% block nav_login %}{% endblock %}">Login</a>
+                    </li>
+                    <li>
+                        <a href="/register" class="{% block nav_register %}{% endblock %}">Register</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>

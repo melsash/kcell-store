@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
-from app.cart import cart_item_count
 from app.database.db import SessionLocal
 from app.models.product import Product
+from app.page_context import page_context
 from app.schemas.product import ProductCreate, ProductResponse
 from app.templating import templates
 
@@ -43,11 +43,7 @@ def get_product(
         return templates.TemplateResponse(
             request=request,
             name="product.html",
-            context={
-                "request": request,
-                "product": product,
-                "cart_count": cart_item_count(request),
-            },
+            context=page_context(request, db, product=product),
         )
 
     return ProductResponse.model_validate(product)

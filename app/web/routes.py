@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from app.cart import (
     add_to_cart,
     build_cart_lines,
-    cart_item_count,
     clear_cart,
     decrease_quantity,
     get_cart,
@@ -14,6 +13,7 @@ from app.cart import (
 )
 from app.database.db import SessionLocal
 from app.models.product import Product
+from app.page_context import page_context
 from app.services.checkout import create_order_from_cart
 from app.templating import templates
 
@@ -26,14 +26,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-def template_context(request: Request, db: Session, **extra):
-    return {
-        "request": request,
-        "cart_count": cart_item_count(request),
-        **extra,
-    }
 
 
 @router.post("/cart/add")
@@ -75,7 +67,7 @@ def cart_page(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         request=request,
         name="cart.html",
-        context=template_context(
+        context=page_context(
             request,
             db,
             cart_lines=lines,
@@ -122,5 +114,5 @@ def order_success(
     return templates.TemplateResponse(
         request=request,
         name="success.html",
-        context=template_context(request, db, order_id=order_id),
+        context=page_context(request, db, order_id=order_id),
     )

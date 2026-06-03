@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Register — Kcell Store{% endblock %}
+{% block nav_register %}is-active{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="order-panel">
+        <h1>Register</h1>
+        <p class="order-panel__subtitle">Create an account to shop with Kcell Store.</p>
+
+        {% if error %}
+        <p style="color: #c93400; margin-bottom: 20px;">{{ error }}</p>
+        {% endif %}
+
+        <form action="/register" method="post">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    id="email"
+                    class="form-input"
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    id="password"
+                    class="form-input"
+                    type="password"
+                    name="password"
+                    placeholder="At least 8 characters"
+                    minlength="8"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn--primary">
+                Create account
+            </button>
+        </form>
+
+        <p style="margin-top: 20px; color: var(--text-muted); font-size: 0.9375rem;">
+            Already have an account? <a href="/login" style="color: var(--accent); font-weight: 500;">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

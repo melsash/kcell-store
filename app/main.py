@@ -10,13 +10,15 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.api.products import router as products_router
 from app.api.orders import router as orders_router
-from app.cart import build_cart_lines, cart_item_count
+from app.cart import build_cart_lines
 from app.database.init_db import init_db
 from app.database.seed_products import seed_products_if_empty
 from app.database.db import SessionLocal
 from app.models.product import Product
 from app.templating import templates
+from app.web.auth_routes import router as auth_router
 from app.web.routes import router as storefront_router
+from app.page_context import page_context
 
 load_dotenv()
 
@@ -34,6 +36,7 @@ app.add_middleware(
 )
 
 app.include_router(storefront_router)
+app.include_router(auth_router)
 app.include_router(products_router)
 app.include_router(orders_router)
 
@@ -76,11 +79,11 @@ def shop(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={
-            "request": request,
-            "products": products,
-            "cart_count": cart_item_count(request),
-        },
+        context=page_context(
+            request,
+            db,
+            products=products,
+        ),
     )
 
 
@@ -90,10 +93,10 @@ def orders_page(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         request=request,
         name="orders.html",
-        context={
-            "request": request,
-            "cart_lines": cart_lines,
-            "total": total,
-            "cart_count": cart_item_count(request),
-        },
+        context=page_context(
+            request,
+            db,
+            cart_lines=cart_lines,
+            total=total,
+        ),
     )
