@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Request
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
+
+from sqlalchemy import asc, desc
+
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.api.products import router as products_router
@@ -14,6 +17,7 @@ from app.cart import build_cart_lines
 from app.database.init_db import init_db
 from app.database.migrate_orders import migrate_order_user_id
 from app.database.migrate_users import migrate_user_roles
+from app.database.migrate_categories import migrate_product_categories
 from app.database.seed_admin import seed_admin_if_missing
 from app.database.seed_products import seed_products_if_empty
 from app.database.db import SessionLocal
@@ -53,6 +57,7 @@ def on_startup() -> None:
             init_db()
             migrate_user_roles()
             migrate_order_user_id()
+            migrate_product_categories()
             seed_admin_if_missing()
             seed_products_if_empty()
             return
@@ -82,8 +87,35 @@ def home():
 
 
 @app.get("/shop")
-def shop(request: Request, db: Session = Depends(get_db)):
-    products = db.query(Product).all()
+def shop(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    search = request.query_params.get("search")
+    sort = request.query_params.get("sort")
+    category = request.query_params.get("category")
+
+    query = db.query(Product)
+
+    if search:
+        query = query.filter(
+            Product.name.ilike(f"%{search}%")
+        )
+
+    if category:
+        query = query.filter(
+            Product.category == category
+        )
+    
+
+    if sort == "price_asc":
+        query = query.order_by(asc(Product.price))
+
+    elif sort == "price_desc":
+        query = query.order_by(desc(Product.price))
+
+    products = query.all()
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -91,6 +123,9 @@ def shop(request: Request, db: Session = Depends(get_db)):
             request,
             db,
             products=products,
+            search=search,
+            sort=sort,
+            category=category,
         ),
     )
 

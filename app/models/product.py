@@ -9,3 +9,5 @@ class Product(Base):
     description = Column(String)
     price = Column(Float, nullable=False)
     image = Column(String)
+
+    category = Column(String, default="Phones")
