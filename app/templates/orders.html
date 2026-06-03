@@ -1,33 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Order</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h1>Create Order</h1>
+{% block title %}Create Order — Kcell Store{% endblock %}
+{% block nav_orders %}is-active{% endblock %}
 
-<form>
+{% block content %}
+<div class="container">
+    <div class="order-panel">
+        <h1>Create Order</h1>
+        <p class="order-panel__subtitle">Enter your details to complete your purchase.</p>
 
-    <input
-        type="text"
-        placeholder="Your name"
-    >
+        <form>
+            <div class="form-group">
+                <label for="customer-name">Your name</label>
+                <input
+                    id="customer-name"
+                    class="form-input"
+                    type="text"
+                    placeholder="Your name"
+                >
+            </div>
 
-    <br><br>
+            <div class="form-group">
+                <label for="phone-number">Phone number</label>
+                <input
+                    id="phone-number"
+                    class="form-input"
+                    type="text"
+                    placeholder="Phone number"
+                >
+            </div>
 
-    <input
-        type="text"
-        placeholder="Phone number"
-    >
-
-    <br><br>
-
-    <button>
-        Place Order
-    </button>
-
-</form>
-
-</body>
-</html>
+            <button type="submit" class="btn btn--primary">
+                Place Order
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
