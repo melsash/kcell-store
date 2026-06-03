@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — Kcell Store{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="product-detail">
+        <div class="product-detail__image">
+            {% if product.image %}
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="width: 96px; height: 96px; opacity: 0.35;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            {% endif %}
+        </div>
+        <div>
+            <h1>{{ product.name }}</h1>
+            <p class="product-detail__price">{{ "%.0f"|format(product.price) }} ₸</p>
+            <p class="product-detail__desc">{{ product.description }}</p>
+            <form action="/cart/add" method="post">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn--primary" style="max-width: 280px;">
+                    Add to Cart
+                </button>
+            </form>
+            <p style="margin-top: 16px;">
+                <a href="/shop" style="color: var(--accent); font-weight: 500;">&larr; Back to shop</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
+from app.cart import cart_item_count
 from app.database.db import SessionLocal
 from app.models.product import Product
 from app.schemas.product import ProductCreate, ProductResponse
+from app.templating import templates
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -21,14 +23,34 @@ def get_products(db: Session = Depends(get_db)):
     return db.query(Product).all()
 
 
-@router.get("/{product_id}", response_model=ProductResponse)
-def get_product(product_id: int, db: Session = Depends(get_db)):
+def _wants_html(request: Request) -> bool:
+    accept = request.headers.get("accept", "")
+    return "text/html" in accept and "application/json" not in accept.split(",")[0].strip()
+
+
+@router.get("/{product_id}")
+def get_product(
+    product_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
     product = db.query(Product).filter(Product.id == product_id).first()
 
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    return product
+    if _wants_html(request):
+        return templates.TemplateResponse(
+            request=request,
+            name="product.html",
+            context={
+                "request": request,
+                "product": product,
+                "cart_count": cart_item_count(request),
+            },
+        )
+
+    return ProductResponse.model_validate(product)
 
 
 @router.post("/", response_model=ProductResponse)
