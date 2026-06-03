@@ -18,6 +18,7 @@ from app.database.init_db import init_db
 from app.database.migrate_orders import migrate_order_user_id
 from app.database.migrate_users import migrate_user_roles
 from app.database.migrate_categories import migrate_product_categories
+from app.database.migrate_order_status import migrate_order_status
 from app.database.seed_admin import seed_admin_if_missing
 from app.database.seed_products import seed_products_if_empty
 from app.database.db import SessionLocal
@@ -58,6 +59,7 @@ def on_startup() -> None:
             migrate_user_roles()
             migrate_order_user_id()
             migrate_product_categories()
+            migrate_order_status()
             seed_admin_if_missing()
             seed_products_if_empty()
             return

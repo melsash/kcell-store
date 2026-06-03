@@ -82,6 +82,7 @@ def checkout(
     request: Request,
     customer_name: str = Form(...),
     phone_number: str = Form(...),
+    payment_method: str = Form(...),
     db: Session = Depends(get_db),
 ):
     cart = get_cart(request)
@@ -98,6 +99,7 @@ def checkout(
         db=db,
         customer_name=customer_name.strip(),
         phone_number=phone_number.strip(),
+        payment_method=payment_method.strip(),
         cart=cart,
         user_id=user.id if user else None,
     )

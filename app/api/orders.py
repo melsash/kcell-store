@@ -29,8 +29,10 @@ def create_order(
 ):
     new_order = Order(
         customer_name=order.customer_name,
-        phone_number=order.phone_number
-    )
+        phone_number=order.phone_number,
+        payment_method=getattr(order, "payment_method", "Kaspi"),
+        status="Pending"
+)
 
     db.add(new_order)
     db.commit()

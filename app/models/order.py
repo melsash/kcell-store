@@ -10,9 +10,15 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
+
     customer_name = Column(String, nullable=False)
     phone_number = Column(String, nullable=False)
+
+    payment_method = Column(String, default="Kaspi")
+    status = Column(String, default="Pending")
+
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="orders")
