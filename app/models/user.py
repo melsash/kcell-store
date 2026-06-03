@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.database.db import Base
 
@@ -16,3 +17,5 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     role = Column(String, default=ROLE_USER, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    orders = relationship("Order", back_populates="user")

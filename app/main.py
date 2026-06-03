@@ -12,6 +12,7 @@ from app.api.products import router as products_router
 from app.api.orders import router as orders_router
 from app.cart import build_cart_lines
 from app.database.init_db import init_db
+from app.database.migrate_orders import migrate_order_user_id
 from app.database.migrate_users import migrate_user_roles
 from app.database.seed_admin import seed_admin_if_missing
 from app.database.seed_products import seed_products_if_empty
@@ -51,6 +52,7 @@ def on_startup() -> None:
         try:
             init_db()
             migrate_user_roles()
+            migrate_order_user_id()
             seed_admin_if_missing()
             seed_products_if_empty()
             return

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user
 from app.cart import (
     add_to_cart,
     build_cart_lines,
@@ -92,11 +93,13 @@ def checkout(
         clear_cart(request)
         return RedirectResponse(url="/cart", status_code=303)
 
+    user = get_current_user(request, db)
     order = create_order_from_cart(
         db=db,
         customer_name=customer_name.strip(),
         phone_number=phone_number.strip(),
         cart=cart,
+        user_id=user.id if user else None,
     )
     clear_cart(request)
     return RedirectResponse(

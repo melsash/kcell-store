@@ -9,10 +9,12 @@ def create_order_from_cart(
     customer_name: str,
     phone_number: str,
     cart: dict[str, int],
+    user_id: int | None = None,
 ) -> Order:
     new_order = Order(
         customer_name=customer_name,
         phone_number=phone_number,
+        user_id=user_id,
     )
     db.add(new_order)
     db.commit()

@@ -6,6 +6,7 @@ from app.auth import require_admin
 from app.database.db import SessionLocal
 from app.models.order import Order
 from app.models.product import Product
+from app.models.user import User
 from app.page_context import page_context
 from app.services.admin_orders import build_order_rows
 from app.templating import templates
@@ -30,6 +31,7 @@ def admin_dashboard(request: Request, db: Session = Depends(get_db)):
 
     product_count = db.query(Product).count()
     order_count = db.query(Order).count()
+    user_count = db.query(User).count()
 
     return templates.TemplateResponse(
         request=request,
@@ -39,6 +41,7 @@ def admin_dashboard(request: Request, db: Session = Depends(get_db)):
             db,
             product_count=product_count,
             order_count=order_count,
+            user_count=user_count,
         ),
     )
 
